@@ -156,9 +156,7 @@ export class Visualization extends Component {
     this.graph = graph
     this.autoCompleteRelationships([], this.graph._nodes)
   }
-  setSelectedItem (item) {
-    this.props.setSelectedItem(item)
-  }
+
   render () {
     if (!this.state.nodes.length) return null
 
@@ -179,7 +177,7 @@ export class Visualization extends Component {
             this.autoCompleteCallback = callback
           }}
           setGraph={this.setGraph.bind(this)}
-          setSelectedItem={this.setSelectedItem.bind(this)}
+          setSelectedItem={this.props.setSelectedItem}
         />
       </StyledVisContainer>
     )
@@ -198,7 +196,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(grassActions.updateGraphStyleData(graphStyleData))
     },
     setSelectedItem: item => {
-      const action = itemEditorActions.fetchData(item.item.id)
+      const action = itemEditorActions.fetchData(item.item.id, item.type)
       ownProps.bus.send(action.type, action)
     }
   }
