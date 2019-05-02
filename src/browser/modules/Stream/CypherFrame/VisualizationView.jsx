@@ -192,13 +192,14 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     updateStyle: graphStyleData => {
       dispatch(grassActions.updateGraphStyleData(graphStyleData))
     },
     setSelectedItem: item => {
-      dispatch(itemEditorActions.setSelectedItem(item))
+      const action = itemEditorActions.fetchData(item.item.id)
+      ownProps.bus.send(action.type, action)
     }
   }
 }
