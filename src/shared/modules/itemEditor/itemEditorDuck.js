@@ -1,12 +1,14 @@
 import { handleCypherCommand } from '../commands/helpers/cypher'
 const initialState = {
-  selectedItem: undefined
+  selectedItem: undefined,
+  editButtonToggle: true
 }
 
 // Action type constants
 export const NAME = 'itemEditor'
 export const SET_SELECTED_ITEM = `${NAME}/SET_SELECTED_ITEM`
 export const FETCH_DATA_ON_SELECT = `${NAME}/FETCH_DATA_ON_SELECT`
+export const TOGGLE_EDIT_BUTTON = `${NAME}/TOGGLE_EDIT_BUTTON`
 // Actions
 
 export const setSelectedItem = item => {
@@ -24,11 +26,19 @@ export const fetchData = (id, entityType) => {
   }
 }
 
+export const toggleEditButton = () => {
+  return {
+    type: TOGGLE_EDIT_BUTTON
+  }
+}
+
 // Reducer
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case SET_SELECTED_ITEM:
       return { ...state, selectedItem: action.item }
+    case TOGGLE_EDIT_BUTTON:
+      return { ...state, editButtonToggle: !state.editButtonToggle }
     default:
       return state
   }

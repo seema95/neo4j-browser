@@ -15,6 +15,8 @@ import {
 
 import * as _ from 'lodash'
 import { getStringValue } from './utils'
+import { FormButton } from 'browser-components/buttons/index'
+import { TextInput } from 'browser-components/Form'
 
 export class EditNodes extends Component {
   render () {
@@ -22,7 +24,14 @@ export class EditNodes extends Component {
     content = _.map(this.props.nodeProperties, (value, key) => {
       return (
         <div key={key}>
-          {key}:{getStringValue(value)}
+          {key}:
+          {this.props.toggleEdit ? (
+            getStringValue(value)
+          ) : (
+            <div>
+              <TextInput value={getStringValue(value)} />
+            </div>
+          )}
         </div>
       )
     })
@@ -34,8 +43,36 @@ export class EditNodes extends Component {
           <DrawerSection>
             <DrawerSectionBody>
               <DrawerSubHeader>
-                properties:
+                Properties:
                 {content}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-evenly'
+                  }}
+                >
+                  <FormButton
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '12px',
+                      backgroundColor: '#9195a0',
+                      color: '#30333a'
+                    }}
+                    onClick={this.props.toggleEditButton}
+                  >
+                    {this.props.toggleEdit ? 'Edit' : 'Done'}
+                  </FormButton>
+                  <FormButton
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '12px',
+                      backgroundColor: '#9195a0',
+                      color: '#30333a'
+                    }}
+                  >
+                    Update
+                  </FormButton>
+                </div>
               </DrawerSubHeader>
             </DrawerSectionBody>
           </DrawerSection>
