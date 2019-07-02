@@ -16,7 +16,8 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-
+import { BinIcon } from 'browser-components/icons/Icons'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 const createItems = (originalList, RenderType) => {
   let items = [...originalList]
 
@@ -34,8 +35,8 @@ function DisplayNodeDetails (props) {
   if (labels.length) {
     labelItems = createItems(labels, { component: chip })
   }
-
   let content = <p>There are no properties in database</p>
+  const { removeClick } = props
   if (content) {
     content = _.map(props.selectedItem, (value, key) => {
       return (
@@ -46,6 +47,11 @@ function DisplayNodeDetails (props) {
                 <StyledKeyEditor>{key}:</StyledKeyEditor>
                 <StyledValue data-testid='user-details-username'>
                   {getStringValue(value)}
+                  <ConfirmationButton
+                    requestIcon={<BinIcon />}
+                    confirmIcon={<BinIcon deleteAction />}
+                    onConfirmed={() => removeClick(key, value)}
+                  />
                 </StyledValue>
               </tr>
             </tbody>

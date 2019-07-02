@@ -8,6 +8,7 @@ const initialState = {
 export const NAME = 'itemEditor'
 export const SET_SELECTED_ITEM = `${NAME}/SET_SELECTED_ITEM`
 export const FETCH_DATA_ON_SELECT = `${NAME}/FETCH_DATA_ON_SELECT`
+export const REMOVE_PROPERTY = `${NAME}/REMOVE_PROPERTY`
 // Actions
 
 export const setSelectedItem = item => {
@@ -25,6 +26,13 @@ export const fetchData = (id, entityType) => {
   }
 }
 
+export const removeClick = (propertKey, propertyValue) => {
+  return {
+    type: REMOVE_PROPERTY,
+    propertKey,
+    propertyValue
+  }
+}
 // Reducer
 export default function reducer (state = initialState, action) {
   switch (action.type) {
@@ -32,6 +40,8 @@ export default function reducer (state = initialState, action) {
       return { ...state, selectedItem: action.item }
     case FETCH_DATA_ON_SELECT:
       return { ...state, entityType: action.entityType }
+    case REMOVE_PROPERTY:
+      console.log(action.propertKey, action.propertyValue)
     default:
       return state
   }
