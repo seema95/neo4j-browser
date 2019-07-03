@@ -1,11 +1,3 @@
-/*
- * This module depicts the behaviour of the edit drawer and
- * it imports DisplayNodeDetails which is used for rendering
- * selected node's properties.
- * Also,it imports DisplayRelationshipDetails which is used for rendering
- * selected relationship's properties.
- */
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -17,6 +9,13 @@ import {
   DrawerBody
 } from 'browser-components/drawer/index'
 import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
+import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
+
+/**
+ * The Editor drawer.
+ * Based on selection, either provides node editor or relationship editor.
+ * If nothing is selected then it prompts to do so.
+ */
 export class EditorInfo extends Component {
   render () {
     return (
@@ -24,24 +23,16 @@ export class EditorInfo extends Component {
         <Drawer>
           <DrawerHeader>Editor</DrawerHeader>
           <DrawerBody>
-            {this.props.selectedItem !== undefined ? (
-              this.props.entityType == 'node' ? (
+            {this.props.selectedItem ? (
+              this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
-                  selectedItem={this.props.selectedItem._fields[0].properties}
-                  entityType={this.props.entityType}
-                  labels={this.props.selectedItem._fields[0].labels}
+                  node={this.props.selectedItem}
                   removeClick={this.props.removeClick}
                 />
               ) : (
-                <div>
-                  <DisplayRelationshipDetails
-                    relationshipType={this.props.selectedItem._fields[0].type}
-                    relationshipProperties={
-                      this.props.selectedItem._fields[0].properties
-                    }
-                    entityType={this.props.entityType}
-                  />
-                </div>
+                <DisplayRelationshipDetails
+                  relationship={this.props.selectedItem}
+                />
               )
             ) : null}
           </DrawerBody>
@@ -53,7 +44,7 @@ export class EditorInfo extends Component {
 
 const mapStateToProps = state => {
   return {
-    selectedItem: state.itemEditor.selectedItem,
+    selectedItem: getSelectedItem(state),
     entityType: state.itemEditor.entityType
   }
 }

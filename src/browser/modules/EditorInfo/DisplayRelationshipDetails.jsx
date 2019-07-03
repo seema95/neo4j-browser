@@ -1,54 +1,49 @@
-/*
- * This module maps the props received from EditorInfo and
- * displays the properties,type and entity type of the selected relationship.
- */
-
 import React from 'react'
 import {
-  Drawer,
-  DrawerHeader,
   DrawerSection,
   DrawerSubHeader,
-  DrawerSectionBody,
-  DrawerBody
+  DrawerSectionBody
 } from 'browser-components/drawer/index'
-import { getStringValue } from './utils'
-import * as _ from 'lodash'
-import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import { StyledKeyEditor } from './styled'
+import PropTypes from 'prop-types'
+import { PropertiesSection, EntitySection } from './DisplayNodeDetails'
 
-function DisplayRelationshipDetails (props) {
-  let content = <p>There are no properties in database</p>
-  if (content) {
-    content = _.map(props.relationshipProperties, (value, key) => {
-      return (
-        <div key={key}>
-          <StyledTable>
-            <tbody>
-              <tr>
-                <StyledKeyEditor>{key}:</StyledKeyEditor>
-                <StyledValue data-testid='user-details-username'>
-                  {getStringValue(value)}
-                </StyledValue>
-              </tr>
-            </tbody>
-          </StyledTable>
-        </div>
-      )
-    })
-  }
+/**
+ * Relation ship type section
+ * @param {*} props
+ */
+const RelationShipTypeSection = props => {
+  const { relationship } = props
   return (
-    <div>
-      <DrawerSection>
-        <DrawerSubHeader>Entity</DrawerSubHeader>
-        <DrawerSectionBody>{props.entityType}</DrawerSectionBody>
-      </DrawerSection>
-      <DrawerSection>
-        <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-        <DrawerSectionBody>{props.relationshipType}</DrawerSectionBody>
-      </DrawerSection>
-    </div>
+    <DrawerSection>
+      <DrawerSubHeader>Relationship Type</DrawerSubHeader>
+      <DrawerSectionBody>{relationship.type}</DrawerSectionBody>
+    </DrawerSection>
   )
+}
+
+RelationShipTypeSection.propTypes = {
+  relationship: PropTypes.object
+}
+
+/**
+ * Relationship editor
+ * @param {*} props
+ */
+function DisplayRelationshipDetails (props) {
+  return (
+    <React.Fragment>
+      <EntitySection type='Relationship' />
+      <RelationShipTypeSection {...props} />
+      <PropertiesSection
+        properties={props.relationship ? props.relationship.properties : null}
+        entityType='relationship'
+      />
+    </React.Fragment>
+  )
+}
+
+DisplayRelationshipDetails.propTypes = {
+  relationship: PropTypes.object
 }
 
 export default DisplayRelationshipDetails
