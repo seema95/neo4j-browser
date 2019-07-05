@@ -37,6 +37,7 @@ function DisplayRelationshipDetails (props) {
       <PropertiesSection
         properties={props.relationship ? props.relationship.properties : null}
         entityType='relationship'
+        removeClick={props.removeClick}
       />
     </React.Fragment>
   )

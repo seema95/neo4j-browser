@@ -32,6 +32,7 @@ export class EditorInfo extends Component {
               ) : (
                 <DisplayRelationshipDetails
                   relationship={this.props.selectedItem}
+                  removeClick={this.props.removeClick}
                 />
               )
             ) : null}
