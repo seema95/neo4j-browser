@@ -34,7 +34,9 @@ export const getStringValue = value => {
     return value ? 'true' : 'false'
   }
 
-  // FIXME handle if value is an array
+  if (Array.isArray(value)) {
+    return value.join(' , ')
+  }
 
   return ''
 }
