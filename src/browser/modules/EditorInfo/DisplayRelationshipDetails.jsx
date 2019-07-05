@@ -55,7 +55,8 @@ function DisplayRelationshipDetails (props) {
 }
 
 DisplayRelationshipDetails.propTypes = {
-  relationship: PropTypes.object
+  relationship: PropTypes.object,
+  removeClick: PropTypes.func
 }
 
 export default DisplayRelationshipDetails
