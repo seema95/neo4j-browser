@@ -1,9 +1,9 @@
 import { handleCypherCommand } from '../commands/helpers/cypher'
+import * as _ from 'lodash'
 const initialState = {
   record: undefined,
   entityType: undefined
 }
-
 // Action type constants
 export const NAME = 'itemEditor'
 export const SET_RECORD = `${NAME}/SET_RECORD`
@@ -28,16 +28,31 @@ export const fetchData = (id, entityType) => {
 /**
  * Remove data action creator
  * @param {string/object} propertyKey The propertyKey of selected properties to be removed
- * @param {string} propertyValue The propertyValue of the selected properties to be removed
  */
 
-export const removeClick = (propertyKey, propertyValue) => {
+export const removeClick = propertyKey => {
   return {
     type: REMOVE_PROPERTY,
-    propertyKey,
-    propertyValue
+    propertyKey
   }
 }
+/**
+ * This function is used to map keys from state and key passed as parameter
+ *  if matched then delete properties from redux store
+ * @param {object} state
+ * @param {string} propertyKey The propertyKey of selected properties to be removed
+ */
+export const removePropertyByKey = (state, propertyKey) => {
+  let propertyState = state.record._fields[0].properties
+  let PropertiesKey = _.keys(propertyState)
+  _.mapKeys(PropertiesKey, Key => {
+    if (Key === propertyKey) {
+      delete propertyState[Key]
+    }
+  })
+  return state
+}
+
 // Reducer
 export default function reducer (state = initialState, action) {
   switch (action.type) {
@@ -46,9 +61,8 @@ export default function reducer (state = initialState, action) {
     case FETCH_DATA_ON_SELECT:
       return { ...state, entityType: action.entityType }
     case REMOVE_PROPERTY:
-      console.log(action.propertyKey, action.propertyValue)
-      return state
-
+      let removeProperty = _.cloneDeep(state)
+      return removePropertyByKey(removeProperty, action.propertyKey)
     default:
       return state
   }

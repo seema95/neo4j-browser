@@ -49,10 +49,10 @@ const mapStateToProps = state => {
     entityType: state.itemEditor.entityType
   }
 }
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
-    removeClick: (propertykey, propertyvalue) => {
-      const action = itemEditor.removeClick(propertykey, propertyvalue)
+    removeClick: propertyKey => {
+      const action = itemEditor.removeClick(propertyKey)
       dispatch(action)
     }
   }

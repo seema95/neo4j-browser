@@ -89,7 +89,7 @@ export const PropertiesSection = props => {
                   <ConfirmationButton
                     requestIcon={<BinIcon />}
                     confirmIcon={<BinIcon deleteAction />}
-                    onConfirmed={() => props.removeClick(key, value)}
+                    onConfirmed={() => props.removeClick(key)}
                   />
                 </StyledValue>
               </tr>
