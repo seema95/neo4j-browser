@@ -10,6 +10,7 @@ import {
 } from 'browser-components/drawer/index'
 import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
+import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 
 /**
  * The Editor drawer.
@@ -26,6 +27,7 @@ export class EditorInfo extends Component {
             {this.props.selectedItem ? (
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
+                  editEntityAction={this.props.editEntityAction}
                   node={this.props.selectedItem}
                   removeClick={this.props.removeClick}
                 />
@@ -54,6 +56,15 @@ const mapDispatchToProps = dispatch => {
     removeClick: propertyKey => {
       const action = itemEditor.removeClick(propertyKey)
       dispatch(action)
+    },
+    editEntityAction: (nodeId, firstLabel, editType, entityType) => {
+      const action = itemEditorActions.editEntityAction(
+        nodeId,
+        firstLabel,
+        editType,
+        entityType
+      )
+      ownProps.bus.send(action.type, action)
     }
   }
 }

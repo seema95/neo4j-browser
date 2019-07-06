@@ -84,9 +84,13 @@ import {
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic
 } from './modules/currentUser/currentUserDuck'
-import { handleFetchDataEpic } from './modules/itemEditor/itemEditorDuck'
+import {
+  handleFetchDataEpic,
+  handleEditEntityEpic
+} from './modules/itemEditor/itemEditorDuck'
 
 export default combineEpics(
+  handleEditEntityEpic,
   handleFetchDataEpic,
   handleCommandEpic,
   handleSingleCommandEpic,
