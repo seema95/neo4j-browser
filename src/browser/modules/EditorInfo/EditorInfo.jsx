@@ -8,7 +8,6 @@ import {
   DrawerHeader,
   DrawerBody
 } from 'browser-components/drawer/index'
-import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 
@@ -51,10 +50,10 @@ const mapStateToProps = state => {
     entityType: state.itemEditor.entityType
   }
 }
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     removeClick: propertyKey => {
-      const action = itemEditor.removeClick(propertyKey)
+      const action = itemEditorActions.removeClick(propertyKey)
       dispatch(action)
     },
     editEntityAction: (nodeId, firstLabel, editType, entityType) => {
