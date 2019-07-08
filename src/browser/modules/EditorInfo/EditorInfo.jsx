@@ -28,12 +28,11 @@ export class EditorInfo extends Component {
                 <DisplayNodeDetails
                   editEntityAction={this.props.editEntityAction}
                   node={this.props.selectedItem}
-                  removeClick={this.props.removeClick}
                 />
               ) : (
                 <DisplayRelationshipDetails
                   relationship={this.props.selectedItem}
-                  removeClick={this.props.removeClick}
+                  editEntityAction={this.props.editEntityAction}
                 />
               )
             ) : null}
@@ -52,14 +51,17 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    removeClick: propertyKey => {
-      const action = itemEditorActions.removeClick(propertyKey)
-      dispatch(action)
-    },
-    editEntityAction: (nodeId, firstLabel, editType, entityType) => {
+    editEntityAction: (
+      nodeId,
+      firstLabel,
+      propertyKey,
+      editType,
+      entityType
+    ) => {
       const action = itemEditorActions.editEntityAction(
         nodeId,
         firstLabel,
+        propertyKey,
         editType,
         entityType
       )

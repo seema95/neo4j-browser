@@ -32,42 +32,21 @@ export const fetchData = (id, entityType) => {
  * @param {string} editType edit type (create, update, delete)
  * @param {string} entityType entity type (node, relationship)
  */
-export const editEntityAction = (nodeId, firstLabel, editType, entityType) => {
+export const editEntityAction = (
+  nodeId,
+  firstLabel,
+  propertyKey,
+  editType,
+  entityType
+) => {
   return {
     type: EDIT_ENTITY_ACTION_CONSTANT,
     nodeId,
     firstLabel,
+    propertyKey,
     editType,
     entityType
   }
-}
-
-/**
- * Remove data action creator
- * @param {string/object} propertyKey The propertyKey of selected properties to be removed
- */
-
-export const removeClick = propertyKey => {
-  return {
-    type: REMOVE_PROPERTY,
-    propertyKey
-  }
-}
-/**
- * This function is used to map keys from state and key passed as parameter
- *  if matched then delete properties from redux store
- * @param {object} state
- * @param {string} propertyKey The propertyKey of selected properties to be removed
- */
-export const removePropertyByKey = (state, propertyKey) => {
-  let propertyState = state.record._fields[0].properties
-  let PropertiesKey = _.keys(propertyState)
-  _.mapKeys(PropertiesKey, Key => {
-    if (Key === propertyKey) {
-      delete propertyState[Key]
-    }
-  })
-  return state
 }
 
 // Reducer
@@ -79,9 +58,6 @@ export default function reducer (state = initialState, action) {
       return { ...state, entityType: action.entityType }
     case EDIT_ENTITY_ACTION_CONSTANT:
       return state
-    case REMOVE_PROPERTY:
-      let removeProperty = _.cloneDeep(state)
-      return removePropertyByKey(removeProperty, action.propertyKey)
     default:
       return state
   }
@@ -99,7 +75,9 @@ export const handleFetchDataEpic = (action$, store) =>
         return noop
       })
     }
-    let cmd = `MATCH (a) where id(a)=${action.id} RETURN a, ((a)-->()) , ((a)<--())`
+    let cmd = `MATCH (a) where id(a)=${
+      action.id
+    } RETURN a, ((a)-->()) , ((a)<--())`
     if (action.entityType === 'relationship') {
       cmd = `MATCH ()-[r]->() where id(r)=${action.id} RETURN r`
     }
@@ -110,6 +88,7 @@ export const handleFetchDataEpic = (action$, store) =>
       .then(res => {
         if (res && res.records && res.records.length) {
           store.dispatch({ type: SET_RECORD, item: res.records[0] })
+          console.log(res)
         }
         return noop
       })
@@ -134,9 +113,14 @@ export const handleEditEntityEpic = (action$, store) =>
         break
       case 'delete':
         if (action.entityType === 'node') {
-          cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${action.nodeId} OPTIONAL MATCH (p)-[r]-() DELETE r,p`
+          cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${
+            action.nodeId
+          } OPTIONAL MATCH (p)-[r]-() DELETE r,p`
         } else if (action.entityType === 'relationship') {
           // FIXME find out the command for relationship deletion
+        } else if (action.entityType === 'property') {
+          cmd = `MATCH (a:${action.firstLabel}) where ID(a)=${action.nodeId}
+          REMOVE a.${action.propertyKey} RETURN a, ((a)-->()) , ((a)<--())`
         }
         break
     }
