@@ -43,12 +43,13 @@ RelationShipTypeSection.propTypes = {
 function DisplayRelationshipDetails (props) {
   return (
     <React.Fragment>
-      <EntitySection type='Relationship' />
+      <EntitySection type='Relationship' {...props} />
       <RelationShipTypeSection {...props} />
       <PropertiesSection
         properties={props.relationship ? props.relationship.properties : null}
+        {...props}
         entityType='relationship'
-        removeClick={props.removeClick}
+        editEntityAction={props.editEntityAction}
       />
     </React.Fragment>
   )

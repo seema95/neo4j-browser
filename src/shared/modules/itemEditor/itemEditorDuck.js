@@ -88,7 +88,6 @@ export const handleFetchDataEpic = (action$, store) =>
       .then(res => {
         if (res && res.records && res.records.length) {
           store.dispatch({ type: SET_RECORD, item: res.records[0] })
-          console.log(res)
         }
         return noop
       })
@@ -118,9 +117,13 @@ export const handleEditEntityEpic = (action$, store) =>
           } OPTIONAL MATCH (p)-[r]-() DELETE r,p`
         } else if (action.entityType === 'relationship') {
           // FIXME find out the command for relationship deletion
-        } else if (action.entityType === 'property') {
+        } else if (action.entityType === 'propertyNode') {
           cmd = `MATCH (a:${action.firstLabel}) where ID(a)=${action.nodeId}
           REMOVE a.${action.propertyKey} RETURN a, ((a)-->()) , ((a)<--())`
+        } else if (action.entityType === 'propertyRelationship') {
+          cmd = `MATCH ()-[r:${action.firstLabel}]-() WHERE ID(r)=${
+            action.nodeId
+          } REMOVE r.${action.propertyKey} RETURN r`
         }
         break
     }
@@ -131,7 +134,6 @@ export const handleEditEntityEpic = (action$, store) =>
       let [id, request] = handleCypherCommand(newAction, store.dispatch)
       return request
         .then(res => {
-          console.log(res)
           store.dispatch({ type: SET_RECORD, item: res.records[0] })
           return noop
         })

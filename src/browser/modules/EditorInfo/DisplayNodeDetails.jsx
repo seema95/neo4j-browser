@@ -118,11 +118,15 @@ export const PropertiesSection = props => {
                     confirmIcon={<BinIcon deleteAction />}
                     onConfirmed={() => {
                       props.editEntityAction(
-                        props.node.identity.toInt(),
-                        props.node.labels[0],
+                        props.node
+                          ? props.node.identity.toInt()
+                          : props.relationship.identity.toInt(),
+                        props.node
+                          ? props.node.labels[0]
+                          : props.relationship.type,
                         key,
                         'delete',
-                        'property'
+                        props.node ? 'propertyNode' : 'propertyRelationship'
                       )
                     }}
                   />
@@ -165,6 +169,7 @@ function DisplayNodeDetails (props) {
         {...props}
         properties={props.node ? props.node.properties : null}
         editEntityAction={props.editEntityAction}
+        entityType='node'
       />
     </React.Fragment>
   )
