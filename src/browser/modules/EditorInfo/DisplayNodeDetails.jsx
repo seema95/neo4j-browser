@@ -126,7 +126,7 @@ export const PropertiesSection = props => {
                           : props.relationship.type,
                         key,
                         'delete',
-                        props.node ? 'propertyNode' : 'propertyRelationship'
+                        props.node ? 'nodeProperty' : 'relationshipProperty'
                       )
                     }}
                   />
