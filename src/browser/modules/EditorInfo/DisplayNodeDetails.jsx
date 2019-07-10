@@ -170,6 +170,7 @@ function DisplayNodeDetails (props) {
         fromSelectedNode={props.fromSelectedNode}
         toSelectedNode={props.toSelectedNode}
         entityType={props.entityType}
+        {...props}
       />
     </React.Fragment>
   )
@@ -188,11 +189,15 @@ DisplayNodeDetails.propTypes = {
  * @param {array} selectedNodeRelationship array containing the relationship details
  * @param {string} entityType entity type, either node or relationship
  * @param {string} relationshipEndpoint relationship endpoint, either from or to
+ * @param {function} editEntityAction action to dispatch parameter to delete relationship
+ * @param {Integer} selectedNodeId nodeID of selected node
  */
 const showRelationshipDetails = (
   selectedNodeRelationship,
   entityType,
-  relationshipEndpoint
+  relationshipEndpoint,
+  editEntityAction,
+  selectedNodeId
 ) => {
   let relationShipArray = []
   if (selectedNodeRelationship) {
@@ -207,6 +212,21 @@ const showRelationshipDetails = (
                   {relationshipEndpoint === 'from' && ' ----> '}
                   {relationshipEndpoint === 'to' && ' <---- '}
                   {value.end.identity.toInt()}
+                  <ConfirmationButton
+                    requestIcon={<BinIcon />}
+                    confirmIcon={<BinIcon deleteAction />}
+                    onConfirmed={() => {
+                      // delete the relationship based on ID
+                      editEntityAction(
+                        {
+                          relationshipId: value.segments[0].relationship.identity.toInt(),
+                          nodeId: selectedNodeId
+                        },
+                        'delete',
+                        'relationship'
+                      )
+                    }}
+                  />
                 </StyledValue>
               </tr>
             </tbody>
@@ -234,10 +254,18 @@ export const RelationshipSection = props => {
       {showRelationshipDetails(
         props.fromSelectedNode,
         props.entityType,
-        'from'
+        'from',
+        props.editEntityAction,
+        props.node.identity.toInt()
       )}
       <DrawerSubHeader>To Selected Node</DrawerSubHeader>
-      {showRelationshipDetails(props.toSelectedNode, props.entityType, 'to')}
+      {showRelationshipDetails(
+        props.toSelectedNode,
+        props.entityType,
+        'to',
+        props.editEntityAction,
+        props.node.identity.toInt()
+      )}
     </DrawerSection>
   )
 }
@@ -245,7 +273,9 @@ export const RelationshipSection = props => {
 RelationshipSection.propTypes = {
   entityType: PropTypes.string,
   fromSelectedNode: PropTypes.array,
-  toSelectedNode: PropTypes.array
+  toSelectedNode: PropTypes.array,
+  editEntityAction: PropTypes.func,
+  identity: PropTypes.Integer
 }
 
 export default DisplayNodeDetails
